@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Investment History</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            padding: 20px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1f3c88;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e0e6ed;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #eef2f7;
+        }
+
+        tr:hover {
+            background-color: #f9fcff;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .Profit {
+            background: #e6f7ee;
+            color: #2e7d32;
+        }
+
+        .Loss {
+            background: #fdecea;
+            color: #c62828;
+        }
+
+        .Neutral {
+            background: #e3eaf3;
+            color: #2f4b7c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Investment History Report</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Plan Name</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Gain/Loss</th>
+                <th>Current Value</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 50 Dummy Investment Records -->
+            <!-- Sample Rows Below. Replace this with full block if needed. -->
+            <tr>
+                <td>1</td>
+                <td>Half Fund</td>
+                <td>21/02/2025</td>
+                <td>Withdrawal</td>
+                <td>$9,630.98</td>
+                <td>+$150.66</td>
+                <td>$9,781.64</td>
+                <td><span class="status Profit">Profit</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Read Fund</td>
+                <td>20/11/2024</td>
+                <td>Withdrawal</td>
+                <td>$8,476.48</td>
+                <td>+$230.33</td>
+                <td>$8,706.81</td>
+                <td><span class="status Profit">Profit</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Respond Fund</td>
+                <td>08/07/2024</td>
+                <td>Investment</td>
+                <td>$9,372.38</td>
+                <td>+$412.13</td>
+                <td>$9,784.51</td>
+                <td><span class="status Profit">Profit</span></td>
+            </tr>
+            <tr><td>4</td><td>Half Fund</td><td>21/02/2025</td><td>Withdrawal</td>
+                <td>$9,630.98</td><td>+$150.66</td><td>$9,781.64</td>
+                <td><span class="status Profit">Profit</span></td></tr>
+            <tr><td>5</td><td>Read Fund</td><td>20/11/2024</td><td>Withdrawal</td>
+                <td>$8,476.48</td><td>+$230.33</td><td>$8,706.81</td>
+                <td><span class="status Profit">Profit</span></td></tr>
+            <tr><td>6</td><td>Respond Fund</td><td>08/07/2024</td><td>Investment</td>
+                <td>$9,372.38</td><td>+$412.13</td><td>$9,784.51</td>
+                <td><span class="status Profit">Profit</span></td></tr>
+            <tr><td>7</td><td>Election Fund</td><td>26/03/2025</td><td>Investment</td>
+                <td>$1,002.57</td><td>+$59.05</td><td>$1,061.62</td>
+                <td><span class="status Profit">Profit</span></td></tr>
+            <tr><td>8</td><td>Herself Fund</td><td>01/09/2024</td><td>Investment</td>
+                <td>$9,217.33</td><td>+$385.86</td><td>$9,603.19</td>
+                <td><span class="status Profit">Profit</span></td></tr>
+                <tr>
+                    <td>9</td>
+                    <td>Half Fund</td>
+                    <td>21/02/2025</td>
+                    <td>Withdrawal</td>
+                    <td>$9,630.98</td>
+                    <td>+$150.66</td>
+                    <td>$9,781.64</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Read Fund</td>
+                    <td>20/11/2024</td>
+                    <td>Withdrawal</td>
+                    <td>$8,476.48</td>
+                    <td>+$230.33</td>
+                    <td>$8,706.81</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Respond Fund</td>
+                    <td>08/07/2024</td>
+                    <td>Investment</td>
+                    <td>$9,372.38</td>
+                    <td>+$412.13</td>
+                    <td>$9,784.51</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Election Fund</td>
+                    <td>26/03/2025</td>
+                    <td>Investment</td>
+                    <td>$1,002.57</td>
+                    <td>+$59.05</td>
+                    <td>$1,061.62</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Herself Fund</td>
+                    <td>01/09/2024</td>
+                    <td>Investment</td>
+                    <td>$9,217.33</td>
+                    <td>+$385.86</td>
+                    <td>$9,603.19</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>Half Fund</td>
+                    <td>21/02/2025</td>
+                    <td>Withdrawal</td>
+                    <td>$9,630.98</td>
+                    <td>+$150.66</td>
+                    <td>$9,781.64</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Read Fund</td>
+                    <td>20/11/2024</td>
+                    <td>Withdrawal</td>
+                    <td>$8,476.48</td>
+                    <td>+$230.33</td>
+                    <td>$8,706.81</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>Respond Fund</td>
+                    <td>08/07/2024</td>
+                    <td>Investment</td>
+                    <td>$9,372.38</td>
+                    <td>+$412.13</td>
+                    <td>$9,784.51</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>Election Fund</td>
+                    <td>26/03/2025</td>
+                    <td>Investment</td>
+                    <td>$1,002.57</td>
+                    <td>+$59.05</td>
+                    <td>$1,061.62</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>Herself Fund</td>
+                    <td>01/09/2024</td>
+                    <td>Investment</td>
+                    <td>$9,217.33</td>
+                    <td>+$385.86</td>
+                    <td>$9,603.19</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>Half Fund</td>
+                    <td>21/02/2025</td>
+                    <td>Withdrawal</td>
+                    <td>$9,630.98</td>
+                    <td>+$150.66</td>
+                    <td>$9,781.64</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>Read Fund</td>
+                    <td>20/11/2024</td>
+                    <td>Withdrawal</td>
+                    <td>$8,476.48</td>
+                    <td>+$230.33</td>
+                    <td>$8,706.81</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>21</td>
+                    <td>Respond Fund</td>
+                    <td>08/07/2024</td>
+                    <td>Investment</td>
+                    <td>$9,372.38</td>
+                    <td>+$412.13</td>
+                    <td>$9,784.51</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>Election Fund</td>
+                    <td>26/03/2025</td>
+                    <td>Investment</td>
+                    <td>$1,002.57</td>
+                    <td>+$59.05</td>
+                    <td>$1,061.62</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                <tr>
+                    <td>23</td>
+                    <td>Herself Fund</td>
+                    <td>01/09/2024</td>
+                    <td>Investment</td>
+                    <td>$9,217.33</td>
+                    <td>+$385.86</td>
+                    <td>$9,603.19</td>
+                    <td><span class="status Profit">Profit</span></td>
+                </tr>
+                                
+            </tbody>
+    </table>
+
+</body>
+
+</html>

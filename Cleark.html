@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enomy Finance Staff System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body,
+        html {
+            height: 100%;
+            background: #f5f7fa;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Login form */
+        #login-form {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        #login-form h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        #login-form label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        #login-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1.8px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        #login-form input:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+
+        #login-form button {
+            margin-top: 20px;
+            width: 100%;
+            background: #2980b9;
+            border: none;
+            color: white;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #login-form button:hover {
+            background: #2471a3;
+        }
+
+        #login-error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard layout */
+        #dashboard {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #34495e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-item:hover {
+            background: #2c3e50;
+        }
+
+        .nav-item.active {
+            background: #2980b9;
+        }
+
+        .sidebar .logout-btn {
+            margin-top: auto;
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sidebar .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #fff;
+        }
+
+        .main-header {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        /* Summary cards */
+        .cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            flex: 1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+
+        .card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        /* Transactions section */
+        .transactions {
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-btn {
+            margin-right: 6px;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .approve-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .approve-btn:hover {
+            background-color: #219150;
+        }
+
+        .reject-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Add transaction form */
+        #add-transaction-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #add-transaction-form input,
+        #add-transaction-form select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1.8px solid #ddd;
+            font-size: 1rem;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        #add-transaction-form button {
+            background: #27ae60;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        #add-transaction-form button:hover {
+            background: #219150;
+        }
+
+        /* Profile */
+        #profile {
+            max-width: 400px;
+        }
+
+        #profile h3 {
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        #profile p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Mortgage Reminder */
+        #reminder-form {
+            max-width: 400px;
+        }
+
+        #reminder-form input,
+        #reminder-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1.8px solid #ddd;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        #reminder-form button {
+            background: #2980b9;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #reminder-form button:hover {
+            background: #2471a3;
+        }
+
+        #reminder-msg {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- Login form initially shown here -->
+    </div>
+
+    <script>
+        // Hardcoded user for demo purpose
+        const validUser = { username: 'staff', password: 'password123', fullname: 'Marco Enomy' };
+
+        // Initialize localStorage with some transactions if empty
+        const initData = () => {
+            if (!localStorage.getItem('transactions')) {
+                const demoTransactions = [
+                    { id: 1, client: 'Client A', type: 'Invoice Paid', amount: 2500, date: '2025-06-01', status: 'Approved' },
+                    { id: 2, client: 'Client B', type: 'Payment Pending', amount: 1200, date: '2025-06-02', status: 'Pending' },
+                    { id: 3, client: 'Client C', type: 'Invoice Paid', amount: 5000, date: '2025-06-03', status: 'Approved' }
+                ];
+                localStorage.setItem('transactions', JSON.stringify(demoTransactions));
+            }
+        };
+
+        // State: current view
+        let currentView = 'dashboard'; // dashboard, transactions, addTransaction, profile, reminder
+
+        // Render login form
+        const loadLoginForm = () => {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+      <form id="login-form">
+        <h2>Staff Login</h2>
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+        <button type="submit">Login</button>
+        <div id="login-error"></div>
+      </form>
+    `;
+
+            const form = document.getElementById('login-form');
+            const error = document.getElementById('login-error');
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const username = form.username.value.trim();
+                const password = form.password.value.trim();
+                if (username === validUser.username && password === validUser.password) {
+                    localStorage.setItem('loggedIn', 'true');
+                    localStorage.setItem('loggedUser', JSON.stringify(validUser));
+                    renderDashboard();
+                } else {
+                    error.textContent = 'Invalid username or password.';
+                }
+            });
+        };
+
+        // Logout
+        const logout = () => {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('loggedUser');
+            currentView = 'dashboard';
+            loadLoginForm();
+        };
+
+        // Sidebar navigation click handler
+        const handleNavClick = (view) => {
+            currentView = view;
+            updateSidebarActive();
+            renderView();
+        };
+
+        // Update active class on sidebar nav items
+        const updateSidebarActive = () => {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.view === currentView) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        };
+
+        // Render sidebar + main container
+        const renderDashboard = () => {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+      <div id="dashboard">
+        <aside class="sidebar">
+          <h2>Enomy Staff</h2>
+          <div class="nav-item active" data-view="dashboard">Dashboard</div>
+          <div class="nav-item" data-view="transactions">Transactions</div>
+          <div class="nav-item" data-view="addTransaction">Add Transaction</div>
+          <div class="nav-item" data-view="reminder">Mortgage Reminder</div>
+          <div class="nav-item" data-view="profile">Profile</div>
+          <button class="logout-btn">Logout</button>
+        </aside>
+        <main class="main-content"></main>
+      </div>
+    `;
+
+            // Add listeners
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    handleNavClick(item.dataset.view);
+                });
+            });
+            document.querySelector('.logout-btn').addEventListener('click', logout);
+
+            updateSidebarActive();
+            renderView();
+        };
+
+        // Render views according to currentView
+        const renderView = () => {
+            const container = document.querySelector('.main-content');
+            switch (currentView) {
+                case 'dashboard':
+                    renderDashboardView(container);
+                    break;
+                case 'transactions':
+                    renderTransactionsView(container);
+                    break;
+                case 'addTransaction':
+                    renderAddTransactionView(container);
+                    break;
+                case 'profile':
+                    renderProfileView(container);
+                    break;
+                case 'reminder':
+                    renderReminderView(container);
+                    break;
+                default:
+                    container.innerHTML = '<p>Page not found.</p>';
+            }
+        };
+
+        // --- DASHBOARD VIEW ---
+        const renderDashboardView = (container) => {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+            // Calculate totals
+            let totalRevenue = 0;
+            let pendingPayments = 0;
+            const clientsSet = new Set();
+
+            transactions.forEach(t => {
+                clientsSet.add(t.client);
+                if (t.status === 'Approved') {
+                    if (t.type === 'Invoice Paid') totalRevenue += t.amount;
+                    else if (t.type === 'Payment Pending') pendingPayments += t.amount;
+                } else if (t.status === 'Pending' && t.type === 'Payment Pending') {
+                    pendingPayments += t.amount;
+                }
+            });
+
+            container.innerHTML = `
+      <header class="main-header">Dashboard</header>
+      <section class="cards">
+        <div class="card">
+          <h3>Total Revenue</h3>
+          <div class="number">$${totalRevenue.toLocaleString()}</div>
+        </div>
+        <div class="card">
+          <h3>Pending Payments</h3>
+          <div class="number">$${pendingPayments.toLocaleString()}</div>
+        </div>
+        <div class="card">
+          <h3>Clients Served</h3>
+          <div class="number">${clientsSet.size}</div>
+        </div>
+      </section>
+      <section>
+        <h3>Recent Transactions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${transactions.slice(-5).reverse().map(t => `
+              <tr>
+                <td>${t.client}</td>
+                <td>${t.type}</td>
+                <td>$${t.amount.toLocaleString()}</td>
+                <td>${t.date}</td>
+                <td>${t.status || 'N/A'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </section>
+    `;
+        };
+
+        // --- TRANSACTIONS VIEW ---
+        const renderTransactionsView = (container) => {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            container.innerHTML = `
+      <header class="main-header">All Transactions</header>
+      <section class="transactions">
+        ${transactions.length === 0 ? '<p>No transactions recorded yet.</p>' : `
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${transactions.map(t => `
+                <tr>
+                  <td>${t.client}</td>
+                  <td>${t.type}</td>
+                  <td>$${t.amount.toLocaleString()}</td>
+                  <td>${t.date}</td>
+                  <td>${t.status || 'N/A'}</td>
+                  <td>
+                    ${t.status === 'Pending' ? `
+                      <button class="action-btn approve-btn" data-id="${t.id}">Approve</button>
+                      <button class="action-btn reject-btn" data-id="${t.id}">Reject</button>
+                    ` : ''}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `}
+      </section>
+    `;
+
+            // Attach event listeners for approve/reject buttons
+            container.querySelectorAll('.approve-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    const id = parseInt(e.target.dataset.id);
+                    updateTransactionStatus(id, 'Approved');
+                });
+            });
+            container.querySelectorAll('.reject-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    const id = parseInt(e.target.dataset.id);
+                    updateTransactionStatus(id, 'Rejected');
+                });
+            });
+        };
+
+        // Update transaction status and re-render transactions view
+        const updateTransactionStatus = (id, newStatus) => {
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const idx = transactions.findIndex(t => t.id === id);
+            if (idx !== -1) {
+                transactions[idx].status = newStatus;
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+                alert(`Transaction #${id} ${newStatus.toLowerCase()} successfully.`);
+                if (currentView === 'transactions') renderTransactionsView(document.querySelector('.main-content'));
+                else renderDashboardView(document.querySelector('.main-content'));
+            }
+        };
+
+        // --- ADD TRANSACTION VIEW ---
+        const renderAddTransactionView = (container) => {
+            container.innerHTML = `
+      <header class="main-header">Add New Transaction</header>
+      <form id="add-transaction-form">
+        <input type="text" id="client" placeholder="Client Name" required />
+        <select id="type" required>
+          <option value="">Select Transaction Type</option>
+          <option value="Invoice Paid">Invoice Paid</option>
+          <option value="Payment Pending">Payment Pending</option>
+          <option value="Refund">Refund</option>
+        </select>
+        <input type="number" id="amount" placeholder="Amount" min="1" required />
+        <input type="date" id="date" required />
+        <button type="submit">Add</button>
+      </form>
+      <div id="add-transaction-msg" style="margin-top:15px; color: green; font-weight: 600;"></div>
+    `;
+
+            const form = document.getElementById('add-transaction-form');
+            const msg = document.getElementById('add-transaction-msg');
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const client = document.getElementById('client').value.trim();
+                const type = document.getElementById('type').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const date = document.getElementById('date').value;
+
+                if (!client || !type || !amount || !date) {
+                    msg.style.color = 'red';
+                    msg.textContent = 'Please fill all fields correctly.';
+                    return;
+                }
+
+                let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                const newTransaction = {
+                    id: transactions.length ? transactions[transactions.length - 1].id + 1 : 1,
+                    client,
+                    type,
+                    amount,
+                    date,
+                    status: type === 'Payment Pending' ? 'Pending' : 'Approved' // Pending only if payment pending
+                };
+                transactions.push(newTransaction);
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+
+                msg.style.color = 'green';
+                msg.textContent = 'Transaction added successfully!';
+
+                form.reset();
+            });
+        };
+
+        // --- PROFILE VIEW ---
+        const renderProfileView = (container) => {
+            container.innerHTML = `
+      <header class="main-header">Your Profile</header>
+      <section id="profile">
+        <h3>${validUser.fullname}</h3>
+        <p><strong>Username:</strong> ${validUser.username}</p>
+        <p><strong>Role:</strong> Staff</p>
+        <p><em>More profile features can be added here.</em></p>
+      </section>
+    `;
+        };
+
+        // --- MORTGAGE REMINDER VIEW ---
+        const renderReminderView = (container) => {
+            container.innerHTML = `
+      <header class="main-header">Send Mortgage Payment Reminder</header>
+      <form id="reminder-form">
+        <input type="text" id="reminder-client" placeholder="Client Name" required />
+        <textarea id="reminder-message" rows="4" placeholder="Reminder Message" required></textarea>
+        <button type="submit">Send Reminder</button>
+      </form>
+      <div id="reminder-msg"></div>
+    `;
+
+            const form = document.getElementById('reminder-form');
+            const msg = document.getElementById('reminder-msg');
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const client = document.getElementById('reminder-client').value.trim();
+                const message = document.getElementById('reminder-message').value.trim();
+
+                if (!client || !message) {
+                    msg.style.color = 'red';
+                    msg.textContent = 'Please fill in both fields.';
+                    return;
+                }
+
+                // Simulate sending reminder
+                alert(`Reminder sent to ${client}:\n\n${message}`);
+
+                msg.style.color = 'green';
+                msg.textContent = `Reminder sent successfully to ${client}.`;
+
+                form.reset();
+            });
+        };
+
+        // On load
+        window.onload = () => {
+            initData();
+
+            if (localStorage.getItem('loggedIn') === 'true') {
+                renderDashboard();
+            } else {
+                loadLoginForm();
+            }
+        };
+    </script>
+
+</body>
+
+</html>
