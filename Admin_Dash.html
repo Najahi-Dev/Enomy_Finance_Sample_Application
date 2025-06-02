@@ -274,10 +274,42 @@
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
+            margin-right: 5px;
         }
 
         table .action-btn:hover {
             background: #2c3e50;
+        }
+
+        .approve-btn {
+            background: #28a745;
+        }
+
+        .approve-btn:hover {
+            background: #218838;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: red;
+            font-weight: bold;
         }
 
         .status-active {
@@ -345,7 +377,7 @@
                 <div class="header">
                     <h1>Dashboard | Hello Admin, Welcome Back</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
+                        <img src="https://placehold.co/40" alt="User">
                         <span>John</span>
                     </div>
                 </div>
@@ -411,29 +443,38 @@
                                 <th>Amount</th>
                                 <th>Type</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="transactions-table-body">
                             <tr>
                                 <td>TX001</td>
                                 <td>2025-06-01</td>
                                 <td>£1,500</td>
                                 <td>Deposit</td>
-                                <td>Completed</td>
+                                <td class="status-completed">Completed</td>
+                                <td>-</td>
                             </tr>
                             <tr>
                                 <td>TX002</td>
                                 <td>2025-06-01</td>
                                 <td>£2,300</td>
                                 <td>Withdrawal</td>
-                                <td>Pending</td>
+                                <td class="status-pending">Pending</td>
+                                <td>
+                                    <button class="action-btn approve-btn"
+                                        onclick="approveTransaction('TX002')">Approve</button>
+                                    <button class="action-btn reject-btn"
+                                        onclick="rejectTransaction('TX002')">Reject</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>TX003</td>
                                 <td>2025-06-02</td>
                                 <td>£800</td>
                                 <td>Transfer</td>
-                                <td>Completed</td>
+                                <td class="status-completed">Completed</td>
+                                <td>-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -659,6 +700,13 @@
             { id: 'U003', name: 'Clara Brown', email: 'clara@example.com', joined: '2025-03-10', status: 'Active' }
         ];
 
+        // Simulated transaction data
+        let transactions = [
+            { id: 'TX001', date: '2025-06-01', amount: '£1,500', type: 'Deposit', status: 'Completed' },
+            { id: 'TX002', date: '2025-06-01', amount: '£2,300', type: 'Withdrawal', status: 'Pending' },
+            { id: 'TX003', date: '2025-06-02', amount: '£800', type: 'Transfer', status: 'Completed' }
+        ];
+
         // Navigation
         const navItems = document.querySelectorAll('.nav-item');
         const pages = document.querySelectorAll('.page');
@@ -681,6 +729,51 @@
                 }
             });
         });
+
+        // Function to approve a transaction
+        function approveTransaction(transactionId) {
+            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
+            if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
+                transactions[transactionIndex].status = 'Completed';
+                updateTransactionsTable();
+                alert('Transaction approved successfully!');
+            }
+        }
+
+        // Function to reject a transaction
+        function rejectTransaction(transactionId) {
+            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
+            if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
+                transactions[transactionIndex].status = 'Rejected';
+                updateTransactionsTable();
+                alert('Transaction rejected successfully!');
+            }
+        }
+
+        // Function to update the transactions table
+        function updateTransactionsTable() {
+            const tableBody = document.getElementById('transactions-table-body');
+            tableBody.innerHTML = '';
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                const statusClass = transaction.status === 'Completed' ? 'status-completed' :
+                    transaction.status === 'Pending' ? 'status-pending' :
+                        'status-rejected';
+                const actionButtons = transaction.status === 'Pending' ?
+                    `<button class="action-btn approve-btn" onclick="approveTransaction('${transaction.id}')">Approve</button>
+                     <button class="action-btn reject-btn" onclick="rejectTransaction('${transaction.id}')">Reject</button>` :
+                    '-';
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td>${transaction.date}</td>
+                    <td>${transaction.amount}</td>
+                    <td>${transaction.type}</td>
+                    <td class="${statusClass}">${transaction.status}</td>
+                    <td>${actionButtons}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
 
         // Function to navigate to Edit User page and load user data
         function navigateToEditUser(userId) {
@@ -892,6 +985,9 @@
                 });
             }
         }
+
+        // Initial load of transactions table
+        updateTransactionsTable();
     </script>
 </body>
 
