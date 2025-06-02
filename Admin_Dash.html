@@ -334,6 +334,7 @@
                 <li class="nav-item" data-page="transactions">Transactions</li>
                 <li class="nav-item" data-page="users">Users</li>
                 <li class="nav-item" data-page="add-user">Add New User</li>
+                <li class="nav-item" data-page="edit-user">Edit User</li>
                 <li class="nav-item" data-page="investments">Investments</li>
                 <li class="nav-item" data-page="settings">Settings</li>
             </ul>
@@ -458,6 +459,7 @@
                                 <th>Email</th>
                                 <th>Joined</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="users-table-body">
@@ -467,6 +469,7 @@
                                 <td>alice@example.com</td>
                                 <td>2025-01-15</td>
                                 <td class="status-active">Active</td>
+                                <td><button class="action-btn" onclick="navigateToEditUser('U001')">Edit</button></td>
                             </tr>
                             <tr>
                                 <td>U002</td>
@@ -474,6 +477,7 @@
                                 <td>bob@example.com</td>
                                 <td>2025-02-20</td>
                                 <td class="status-inactive">Inactive</td>
+                                <td><button class="action-btn" onclick="navigateToEditUser('U002')">Edit</button></td>
                             </tr>
                             <tr>
                                 <td>U003</td>
@@ -481,6 +485,7 @@
                                 <td>clara@example.com</td>
                                 <td>2025-03-10</td>
                                 <td class="status-active">Active</td>
+                                <td><button class="action-btn" onclick="navigateToEditUser('U003')">Edit</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -515,6 +520,42 @@
                     </div>
                     <div class="form-group">
                         <button onclick="addNewUser()">Add User</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit User Page -->
+            <div class="page" id="edit-user">
+                <div class="header">
+                    <h1>Edit User Information</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Edit User Details</h3>
+                    <div class="form-group">
+                        <label for="edit-user-id">User ID</label>
+                        <input type="text" id="edit-user-id" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-name">Name</label>
+                        <input type="text" id="edit-user-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-email">Email</label>
+                        <input type="email" id="edit-user-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-status">Status</label>
+                        <select id="edit-user-status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="saveUserChanges()">Save Changes</button>
                     </div>
                 </div>
             </div>
@@ -641,6 +682,58 @@
             });
         });
 
+        // Function to navigate to Edit User page and load user data
+        function navigateToEditUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('edit-user-id').value = user.id;
+                document.getElementById('edit-user-name').value = user.name;
+                document.getElementById('edit-user-email').value = user.email;
+                document.getElementById('edit-user-status').value = user.status;
+
+                // Navigate to Edit User page
+                navItems.forEach(nav => nav.classList.remove('active'));
+                document.querySelector(`.nav-item[data-page="edit-user"]`).classList.add('active');
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById('edit-user').classList.add('active');
+            }
+        }
+
+        // Function to save user changes
+        function saveUserChanges() {
+            const userId = document.getElementById('edit-user-id').value;
+            const userIndex = users.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                users[userIndex].name = document.getElementById('edit-user-name').value;
+                users[userIndex].email = document.getElementById('edit-user-email').value;
+                users[userIndex].status = document.getElementById('edit-user-status').value;
+
+                // Update the users table
+                const tableBody = document.getElementById('users-table-body');
+                tableBody.innerHTML = '';
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.joined}</td>
+                        <td class="${user.status === 'Active' ? 'status-active' : 'status-inactive'}">${user.status}</td>
+                        <td><button class="action-btn" onclick="navigateToEditUser('${user.id}')">Edit</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                alert('User information updated successfully!');
+
+                // Navigate back to Users page
+                navItems.forEach(nav => nav.classList.remove('active'));
+                document.querySelector(`.nav-item[data-page="users"]`).classList.add('active');
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById('users').classList.add('active');
+            }
+        }
+
         // Function to add a new user
         function addNewUser() {
             const name = document.getElementById('new-user-name').value;
@@ -674,6 +767,7 @@
                 <td>${newUser.email}</td>
                 <td>${newUser.joined}</td>
                 <td class="${newUser.status === 'Active' ? 'status-active' : 'status-inactive'}">${newUser.status}</td>
+                <td><button class="action-btn" onclick="navigateToEditUser('${newUser.id}')">Edit</button></td>
             `;
             tableBody.appendChild(row);
 
