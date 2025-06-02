@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enomy Finance Advanced Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #1a2a44;
+            color: #fff;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 30px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background: #2c3e50;
+            border-radius: 5px;
+        }
+
+        .sidebar ul li.active {
+            background: #3498db;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1a2a44;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: #1a2a44;
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .stat-card p {
+            color: #7f8c8d;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .stat-card .progress {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .stat-card .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #1abc9c);
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-top: 0;
+            padding: 0 10px;
+        }
+
+        .chart-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chart-card h3 {
+            color: #1a2a44;
+            margin: 0 0 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .details-btn {
+            background: #1a2a44;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            align-self: center;
+            transition: background 0.3s;
+        }
+
+        .details-btn:hover {
+            background: #2c3e50;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #1a2a44;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            color: #1a2a44;
+        }
+
+        .close-btn:hover {
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        table th {
+            background: #1a2a44;
+            color: #fff;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        table .action-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table .action-btn:hover {
+            background: #2c3e50;
+        }
+
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a2a44;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ecf0f1;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            background: #1a2a44;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Enomy Finance</h2>
+            <ul>
+                <li class="nav-item active" data-page="dashboard">Dashboard</li>
+                <li class="nav-item" data-page="transactions">Transactions</li>
+                <li class="nav-item" data-page="users">Users</li>
+                <li class="nav-item" data-page="add-user">Add New User</li>
+                <li class="nav-item" data-page="investments">Investments</li>
+                <li class="nav-item" data-page="settings">Settings</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div class="page active" id="dashboard">
+                <div class="header">
+                    <h1>Dashboard | Hello Admin, Welcome Back</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Total Transactions</h3>
+                        <p id="transactions-value">£3,465M</p>
+                        <p>68.5%</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 68.5%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <p id="users-value">2569</p>
+                        <p>75.2%</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 75.2%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Investments</h3>
+                        <p id="investments-value">£10,569M</p>
+                        <p>87.5%</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 87.5%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart-card">
+                        <h3>Customer Segmentation</h3>
+                        <div class="chart-container">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                        <button class="details-btn" onclick="openModal()">More Details</button>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Trend Analysis</h3>
+                        <div class="chart-container">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Page -->
+            <div class="page" id="transactions">
+                <div class="header">
+                    <h1>Transactions</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Recent Transactions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TX001</td>
+                                <td>2025-06-01</td>
+                                <td>£1,500</td>
+                                <td>Deposit</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>TX002</td>
+                                <td>2025-06-01</td>
+                                <td>£2,300</td>
+                                <td>Withdrawal</td>
+                                <td>Pending</td>
+                            </tr>
+                            <tr>
+                                <td>TX003</td>
+                                <td>2025-06-02</td>
+                                <td>£800</td>
+                                <td>Transfer</td>
+                                <td>Completed</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div class="page" id="users">
+                <div class="header">
+                    <h1>Users</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>User List</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <tr>
+                                <td>U001</td>
+                                <td>Alice Smith</td>
+                                <td>alice@example.com</td>
+                                <td>2025-01-15</td>
+                                <td class="status-active">Active</td>
+                            </tr>
+                            <tr>
+                                <td>U002</td>
+                                <td>Bob Johnson</td>
+                                <td>bob@example.com</td>
+                                <td>2025-02-20</td>
+                                <td class="status-inactive">Inactive</td>
+                            </tr>
+                            <tr>
+                                <td>U003</td>
+                                <td>Clara Brown</td>
+                                <td>clara@example.com</td>
+                                <td>2025-03-10</td>
+                                <td class="status-active">Active</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add New User Page -->
+            <div class="page" id="add-user">
+                <div class="header">
+                    <h1>Add New User</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Add User Details</h3>
+                    <div class="form-group">
+                        <label for="new-user-name">Name</label>
+                        <input type="text" id="new-user-name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-email">Email</label>
+                        <input type="email" id="new-user-email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-status">Status</label>
+                        <select id="new-user-status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="addNewUser()">Add User</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investments Page -->
+            <div class="page" id="investments">
+                <div class="header">
+                    <h1>Investments</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Investment Overview</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Investor</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INV001</td>
+                                <td>Alice Smith</td>
+                                <td>£5,000</td>
+                                <td>2025-04-01</td>
+                                <td>8%</td>
+                            </tr>
+                            <tr>
+                                <td>INV002</td>
+                                <td>Bob Johnson</td>
+                                <td>£10,000</td>
+                                <td>2025-05-15</td>
+                                <td>7.5%</td>
+                            </tr>
+                            <tr>
+                                <td>INV003</td>
+                                <td>Clara Brown</td>
+                                <td>£7,500</td>
+                                <td>2025-06-01</td>
+                                <td>6%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="settings">
+                <div class="header">
+                    <h1>Settings</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>John</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Profile Settings</h3>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" value="John" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="theme">Theme</label>
+                        <select id="theme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="saveSettings()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3>Customer Segmentation Details</h3>
+            <p><strong>Investments:</strong> £30,569M (68.5%)</p>
+            <p><strong>Savings:</strong> £15,966M (68.5%)</p>
+            <p><strong>Transactions:</strong> £3,465M (68.5%)</p>
+            <p>Total: £50,000M</p>
+        </div>
+    </div>
+    <script>
+        // Simulated user data
+        let users = [
+            { id: 'U001', name: 'Alice Smith', email: 'alice@example.com', joined: '2025-01-15', status: 'Active' },
+            { id: 'U002', name: 'Bob Johnson', email: 'bob@example.com', joined: '2025-02-20', status: 'Inactive' },
+            { id: 'U003', name: 'Clara Brown', email: 'clara@example.com', joined: '2025-03-10', status: 'Active' }
+        ];
+
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const pages = document.querySelectorAll('.page');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.getAttribute('data-page');
+
+                // Update active navigation item
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Show selected page
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+
+                // Reinitialize charts if navigating to dashboard
+                if (pageId === 'dashboard') {
+                    initCharts();
+                }
+            });
+        });
+
+        // Function to add a new user
+        function addNewUser() {
+            const name = document.getElementById('new-user-name').value;
+            const email = document.getElementById('new-user-email').value;
+            const status = document.getElementById('new-user-status').value;
+
+            if (!name || !email) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const userId = `U${(users.length + 1).toString().padStart(3, '0')}`;
+            const joinedDate = '2025-06-02'; // Using current date as per system info
+
+            const newUser = {
+                id: userId,
+                name: name,
+                email: email,
+                joined: joinedDate,
+                status: status
+            };
+
+            users.push(newUser);
+
+            // Update the users table
+            const tableBody = document.getElementById('users-table-body');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${newUser.id}</td>
+                <td>${newUser.name}</td>
+                <td>${newUser.email}</td>
+                <td>${newUser.joined}</td>
+                <td class="${newUser.status === 'Active' ? 'status-active' : 'status-inactive'}">${newUser.status}</td>
+            `;
+            tableBody.appendChild(row);
+
+            // Clear the form
+            document.getElementById('new-user-name').value = '';
+            document.getElementById('new-user-email').value = '';
+            document.getElementById('new-user-status').value = 'Active';
+
+            alert('New user added successfully!');
+
+            // Navigate back to Users page
+            navItems.forEach(nav => nav.classList.remove('active'));
+            document.querySelector(`.nav-item[data-page="users"]`).classList.add('active');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById('users').classList.add('active');
+        }
+
+        // Real-time data simulation
+        function updateStats() {
+            const transactions = (Math.random() * 1000 + 3465).toFixed(2);
+            const usersCount = users.length; // Update to reflect actual user count
+            const investments = (Math.random() * 1000 + 10569).toFixed(2);
+
+            document.getElementById('transactions-value').textContent = `£${transactions}M`;
+            document.getElementById('users-value').textContent = usersCount;
+            document.getElementById('investments-value').textContent = `£${investments}M`;
+        }
+        setInterval(updateStats, 5000);
+
+        // Initialize Charts
+        let pieChart, lineChart;
+        function initCharts() {
+            if (pieChart) pieChart.destroy();
+            if (lineChart) lineChart.destroy();
+
+            // Pie Chart
+            pieChart = new Chart(document.getElementById('pieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Investments', 'Savings', 'Transactions'],
+                    datasets: [{
+                        data: [30569, 15966, 3465],
+                        backgroundColor: ['#3498db', '#1abc9c', '#7f8c8d']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', align: 'center' },
+                        title: { display: true, text: 'Total £50,000M', align: 'center' }
+                    }
+                }
+            });
+
+            // Line Chart
+            lineChart = new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: 'Investments',
+                            data: [400, 600, 800, 700, 900, 1000, 800, 1200, 1100, 900, 700, 600],
+                            borderColor: '#3498db',
+                            fill: false
+                        },
+                        {
+                            label: 'Savings',
+                            data: [300, 500, 600, 800, 700, 900, 600, 1000, 800, 600, 500, 400],
+                            borderColor: '#1abc9c',
+                            fill: false
+                        },
+                        {
+                            label: 'Transactions',
+                            data: [200, 400, 500, 600, 500, 700, 400, 800, 600, 400, 300, 200],
+                            borderColor: '#7f8c8d',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', align: 'center' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Initial chart load
+        initCharts();
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        // Settings save function
+        function saveSettings() {
+            const email = document.getElementById('email').value;
+            const theme = document.getElementById('theme').value;
+            alert(`Settings saved!\nEmail: ${email}\nTheme: ${theme}`);
+            if (theme === 'dark') {
+                document.body.style.backgroundColor = '#1a2a44';
+                document.querySelectorAll('.chart-card').forEach(card => {
+                    card.style.backgroundColor = '#2c3e50';
+                    card.style.color = '#fff';
+                });
+            } else {
+                document.body.style.backgroundColor = '#f0f2f5';
+                document.querySelectorAll('.chart-card').forEach(card => {
+                    card.style.backgroundColor = '#fff';
+                    card.style.color = '#000';
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
