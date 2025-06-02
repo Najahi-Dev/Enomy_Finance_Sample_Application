@@ -354,6 +354,70 @@
         .form-group button:hover {
             background: #2c3e50;
         }
+
+        /* Investment Plans Styling */
+        .plans-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #1a2a44, #2c3e50);
+            color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .plan-card h2 {
+            margin: 0 0 10px;
+            font-size: 24px;
+            color: #00ffcc;
+        }
+
+        .plan-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .plan-card ul li {
+            margin-bottom: 10px;
+        }
+
+        .plan-card .select-btn {
+            background: #00aaff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .plan-card .select-btn:hover {
+            background: #0088cc;
+        }
+
+        .edit-section {
+            margin-top: 20px;
+        }
+
+        .edit-section h3 {
+            color: #1a2a44;
+            margin-bottom: 10px;
+        }
+
+        .edit-section form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -377,7 +441,7 @@
                 <div class="header">
                     <h1>Dashboard | Hello Admin, Welcome Back</h1>
                     <div class="user-info">
-                        <img src="https://placehold.co/40" alt="User">
+                        <img src="https://via.placeholder.com/40" alt="User">
                         <span>John</span>
                     </div>
                 </div>
@@ -611,41 +675,92 @@
                     </div>
                 </div>
                 <div class="chart-card">
-                    <h3>Investment Overview</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Investor</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Return</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>INV001</td>
-                                <td>Alice Smith</td>
-                                <td>£5,000</td>
-                                <td>2025-04-01</td>
-                                <td>8%</td>
-                            </tr>
-                            <tr>
-                                <td>INV002</td>
-                                <td>Bob Johnson</td>
-                                <td>£10,000</td>
-                                <td>2025-05-15</td>
-                                <td>7.5%</td>
-                            </tr>
-                            <tr>
-                                <td>INV003</td>
-                                <td>Clara Brown</td>
-                                <td>£7,500</td>
-                                <td>2025-06-01</td>
-                                <td>6%</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h3>Investment Plans</h3>
+                    <div class="plans-container">
+                        <div class="plan-card">
+                            <h2>BASIC INVESTMENT</h2>
+                            <ul>
+                                <li>Max investment per year: <span id="basic-max">£20,000</span></li>
+                                <li>Min investment per year: <span id="basic-min">£50</span></li>
+                                <li>Min monthly investment: <span id="basic-monthly">£50</span></li>
+                                <li>Min initial invest lump sum: <span id="basic-lump">N/A</span></li>
+                                <li>Return per year: <span id="basic-return">1.2% to 2.4%</span></li>
+                                <li>Estimated tax: <span id="basic-tax">0%</span></li>
+                                <li>RBSX fees per month: <span id="basic-fees">0.25%</span></li>
+                            </ul>
+                            <button class="select-btn">Select Plan</button>
+                        </div>
+                        <div class="plan-card">
+                            <h2>SAVINGS PLAN PLUS</h2>
+                            <ul>
+                                <li>Max investment per year: <span id="savings-max">£30,000</span></li>
+                                <li>Min investment per year: <span id="savings-min">£50</span></li>
+                                <li>Min monthly investment: <span id="savings-monthly">£50</span></li>
+                                <li>Min initial invest lump sum: <span id="savings-lump">£300</span></li>
+                                <li>Return per year: <span id="savings-return">3% to 5.5%</span></li>
+                                <li>Estimated tax: <span id="savings-tax">10% above £12,000</span></li>
+                                <li>RBSX fees per month: <span id="savings-fees">0.3%</span></li>
+                            </ul>
+                            <button class="select-btn">Select Plan</button>
+                        </div>
+                        <div class="plan-card">
+                            <h2>STOCK INVESTMENT</h2>
+                            <ul>
+                                <li>Max investment per year: <span id="stock-max">Unlimited</span></li>
+                                <li>Min investment per year: <span id="stock-min">£150</span></li>
+                                <li>Min monthly investment: <span id="stock-monthly">£150</span></li>
+                                <li>Min initial invest lump sum: <span id="stock-lump">£1000</span></li>
+                                <li>Return per year: <span id="stock-return">4% to 23%</span></li>
+                                <li>Estimated tax: <span id="stock-tax">10% above £12,000, 20% above £40,000</span></li>
+                                <li>RBSX fees per month: <span id="stock-fees">1.3%</span></li>
+                            </ul>
+                            <button class="select-btn">Select Plan</button>
+                        </div>
+                    </div>
+                    <div class="edit-section">
+                        <h3>Edit Investment Plans</h3>
+                        <form id="editPlanForm">
+                            <div class="form-group">
+                                <label for="planSelect">Select Plan:</label>
+                                <select id="planSelect" onchange="loadPlanDetails()">
+                                    <option value="basic">Basic Investment</option>
+                                    <option value="savings">Savings Plan Plus</option>
+                                    <option value="stock">Stock Investment</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxInvestment">Max Investment per Year (£):</label>
+                                <input type="text" id="maxInvestment" placeholder="e.g., 20000">
+                            </div>
+                            <div class="form-group">
+                                <label for="minInvestment">Min Investment per Year (£):</label>
+                                <input type="text" id="minInvestment" placeholder="e.g., 50">
+                            </div>
+                            <div class="form-group">
+                                <label for="minMonthly">Min Monthly Investment (£):</label>
+                                <input type="text" id="minMonthly" placeholder="e.g., 50">
+                            </div>
+                            <div class="form-group">
+                                <label for="minLumpSum">Min Initial Lump Sum (£):</label>
+                                <input type="text" id="minLumpSum" placeholder="e.g., N/A or 300">
+                            </div>
+                            <div class="form-group">
+                                <label for="returnRange">Return per Year (%):</label>
+                                <input type="text" id="returnRange" placeholder="e.g., 1.2% to 2.4%">
+                            </div>
+                            <div class="form-group">
+                                <label for="tax">Estimated Tax:</label>
+                                <input type="text" id="tax" placeholder="e.g., 0% or 10% above £12,000">
+                            </div>
+                            <div class="form-group">
+                                <label for="rbsxFees">RBSX Fees per Month (%):</label>
+                                <input type="text" id="rbsxFees" placeholder="e.g., 0.25%">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" onclick="savePlanChanges()">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -707,6 +822,37 @@
             { id: 'TX003', date: '2025-06-02', amount: '£800', type: 'Transfer', status: 'Completed' }
         ];
 
+        // Investment plans data
+        let plans = {
+            basic: {
+                maxInvestment: '£20,000',
+                minInvestment: '£50',
+                minMonthly: '£50',
+                minLumpSum: 'N/A',
+                returnRange: '1.2% to 2.4%',
+                tax: '0%',
+                rbsxFees: '0.25%'
+            },
+            savings: {
+                maxInvestment: '£30,000',
+                minInvestment: '£50',
+                minMonthly: '£50',
+                minLumpSum: '£300',
+                returnRange: '3% to 5.5%',
+                tax: '10% above £12,000',
+                rbsxFees: '0.3%'
+            },
+            stock: {
+                maxInvestment: 'Unlimited',
+                minInvestment: '£150',
+                minMonthly: '£150',
+                minLumpSum: '£1000',
+                returnRange: '4% to 23%',
+                tax: '10% above £12,000, 20% above £40,000',
+                rbsxFees: '1.3%'
+            }
+        };
+
         // Navigation
         const navItems = document.querySelectorAll('.nav-item');
         const pages = document.querySelectorAll('.page');
@@ -726,6 +872,11 @@
                 // Reinitialize charts if navigating to dashboard
                 if (pageId === 'dashboard') {
                     initCharts();
+                }
+
+                // Load investment plans if navigating to investments
+                if (pageId === 'investments') {
+                    updateInvestmentPlans();
                 }
             });
         });
@@ -881,7 +1032,7 @@
         // Real-time data simulation
         function updateStats() {
             const transactions = (Math.random() * 1000 + 3465).toFixed(2);
-            const usersCount = users.length; // Update to reflect actual user count
+            const usersCount = users.length;
             const investments = (Math.random() * 1000 + 10569).toFixed(2);
 
             document.getElementById('transactions-value').textContent = `£${transactions}M`;
@@ -986,8 +1137,68 @@
             }
         }
 
-        // Initial load of transactions table
+        // Function to update investment plans display
+        function updateInvestmentPlans() {
+            // Basic Investment
+            document.getElementById('basic-max').textContent = plans.basic.maxInvestment;
+            document.getElementById('basic-min').textContent = plans.basic.minInvestment;
+            document.getElementById('basic-monthly').textContent = plans.basic.minMonthly;
+            document.getElementById('basic-lump').textContent = plans.basic.minLumpSum;
+            document.getElementById('basic-return').textContent = plans.basic.returnRange;
+            document.getElementById('basic-tax').textContent = plans.basic.tax;
+            document.getElementById('basic-fees').textContent = plans.basic.rbsxFees;
+
+            // Savings Plan Plus
+            document.getElementById('savings-max').textContent = plans.savings.maxInvestment;
+            document.getElementById('savings-min').textContent = plans.savings.minInvestment;
+            document.getElementById('savings-monthly').textContent = plans.savings.minMonthly;
+            document.getElementById('savings-lump').textContent = plans.savings.minLumpSum;
+            document.getElementById('savings-return').textContent = plans.savings.returnRange;
+            document.getElementById('savings-tax').textContent = plans.savings.tax;
+            document.getElementById('savings-fees').textContent = plans.savings.rbsxFees;
+
+            // Stock Investment
+            document.getElementById('stock-max').textContent = plans.stock.maxInvestment;
+            document.getElementById('stock-min').textContent = plans.stock.minInvestment;
+            document.getElementById('stock-monthly').textContent = plans.stock.minMonthly;
+            document.getElementById('stock-lump').textContent = plans.stock.minLumpSum;
+            document.getElementById('stock-return').textContent = plans.stock.returnRange;
+            document.getElementById('stock-tax').textContent = plans.stock.tax;
+            document.getElementById('stock-fees').textContent = plans.stock.rbsxFees;
+        }
+
+        // Load plan details into form
+        function loadPlanDetails() {
+            const planSelect = document.getElementById('planSelect').value;
+            const plan = plans[planSelect];
+            document.getElementById('maxInvestment').value = plan.maxInvestment.replace('£', '');
+            document.getElementById('minInvestment').value = plan.minInvestment.replace('£', '');
+            document.getElementById('minMonthly').value = plan.minMonthly.replace('£', '');
+            document.getElementById('minLumpSum').value = plan.minLumpSum === 'N/A' ? '' : plan.minLumpSum.replace('£', '');
+            document.getElementById('returnRange').value = plan.returnRange;
+            document.getElementById('tax').value = plan.tax;
+            document.getElementById('rbsxFees').value = plan.rbsxFees.replace('%', '');
+        }
+
+        // Save changes to plan
+        function savePlanChanges() {
+            const planSelect = document.getElementById('planSelect').value;
+            plans[planSelect] = {
+                maxInvestment: document.getElementById('maxInvestment').value === 'Unlimited' ? 'Unlimited' : '£' + document.getElementById('maxInvestment').value,
+                minInvestment: '£' + document.getElementById('minInvestment').value,
+                minMonthly: '£' + document.getElementById('minMonthly').value,
+                minLumpSum: document.getElementById('minLumpSum').value === '' ? 'N/A' : '£' + document.getElementById('minLumpSum').value,
+                returnRange: document.getElementById('returnRange').value,
+                tax: document.getElementById('tax').value,
+                rbsxFees: document.getElementById('rbsxFees').value + '%'
+            };
+            alert('Plan updated successfully!');
+            updateInvestmentPlans();
+        }
+
+        // Initial load of transactions table and investment plans
         updateTransactionsTable();
+        updateInvestmentPlans();
     </script>
 </body>
 

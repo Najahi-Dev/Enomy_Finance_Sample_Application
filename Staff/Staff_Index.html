@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enomy Finance - Staff Application</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #1a2a44;
+            color: #fff;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 30px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background: #2c3e50;
+            border-radius: 5px;
+        }
+
+        .sidebar ul li.active {
+            background: #3498db;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1a2a44;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chart-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .chart-card h3 {
+            color: #1a2a44;
+            margin: 0 0 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        table th {
+            background: #1a2a44;
+            color: #fff;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        table .action-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        table .action-btn:hover {
+            background: #2c3e50;
+        }
+
+        .approve-btn {
+            background: #28a745;
+        }
+
+        .approve-btn:hover {
+            background: #218838;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a2a44;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ecf0f1;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            background: #1a2a44;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Enomy Finance</h2>
+            <ul>
+                <li class="nav-item active" data-page="transactions">Client Transactions</li>
+                <li class="nav-item" data-page="mortgages">Assign Mortgages</li>
+                <li class="nav-item" data-page="savings">Client Savings</li>
+                <li class="nav-item" data-page="client-status">Client Status</li>
+                <li class="nav-item" data-page="mortgage-reminders">Mortgage Reminders</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <!-- Client Transactions Page -->
+            <div class="page active" id="transactions">
+                <div class="header">
+                    <h1>Client Transactions</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>Emily</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Pending Transactions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Assign Mortgages Page -->
+            <div class="page" id="mortgages">
+                <div class="header">
+                    <h1>Assign Mortgages</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>Emily</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Assign Mortgage to Client</h3>
+                    <div class="form-group">
+                        <label for="mortgage-client">Client:</label>
+                        <select id="mortgage-client">
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mortgage-amount">Mortgage Amount (£):</label>
+                        <input type="number" id="mortgage-amount" placeholder="Enter amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="mortgage-term">Term (Years):</label>
+                        <input type="number" id="mortgage-term" placeholder="Enter term in years">
+                    </div>
+                    <div class="form-group">
+                        <label for="mortgage-rate">Interest Rate (%):</label>
+                        <input type="number" step="0.01" id="mortgage-rate" placeholder="Enter interest rate">
+                    </div>
+                    <div class="form-group">
+                        <button onclick="assignMortgage()">Assign Mortgage</button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Mortgage Assignments</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mortgage ID</th>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Amount (£)</th>
+                                <th>Term (Years)</th>
+                                <th>Interest Rate (%)</th>
+                                <th>Date Assigned</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mortgages-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Client Savings Page -->
+            <div class="page" id="savings">
+                <div class="header">
+                    <h1>Client Savings</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>Emily</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Client Savings Overview</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Savings (£)</th>
+                                <th>Plan Type</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="savings-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Client Status Page -->
+            <div class="page" id="client-status">
+                <div class="header">
+                    <h1>Client Account Status</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>Emily</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Client Accounts</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Email</th>
+                                <th>Account Status</th>
+                                <th>Joined Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-status-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mortgage Reminders Page -->
+            <div class="page" id="mortgage-reminders">
+                <div class="header">
+                    <h1>Mortgage Reminders</h1>
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <span>Emily</span>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Clients with Mortgages</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mortgage ID</th>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Mortgage Amount (£)</th>
+                                <th>Next Payment (£)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mortgage-fees-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-card">
+                    <h3>Send Mortgage Reminder</h3>
+                    <div class="form-group">
+                        <label for="reminder-client">Client:</label>
+                        <select id="reminder-client" onchange="updateReminderForm()">
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-date">Reminder Date:</label>
+                        <input type="date" id="reminder-date" onchange="updateReminderMessage()">
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-message">Message:</label>
+                        <textarea id="reminder-message" placeholder="Auto-generated message will appear here"
+                            rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="sendMortgageReminder()">Send Reminder</button>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Reminder History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reminder ID</th>
+                                <th>Client ID</th>
+                                <th>Client Name</th>
+                                <th>Reminder Date</th>
+                                <th>Message</th>
+                                <th>Sent Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reminders-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Simulated client data
+        let clients = [
+            { id: 'C001', name: 'Alice Smith', email: 'alice@example.com', status: 'Active', joined: '2025-01-15', savings: 5000, plan: 'Savings Plan Plus', lastUpdated: '2025-06-02' },
+            { id: 'C002', name: 'Bob Johnson', email: 'bob@example.com', status: 'Inactive', joined: '2025-02-20', savings: 3000, plan: 'Basic Investment', lastUpdated: '2025-06-01' },
+            { id: 'C003', name: 'Clara Brown', email: 'clara@example.com', status: 'Active', joined: '2025-03-10', savings: 7500, plan: 'Stock Investment', lastUpdated: '2025-06-02' }
+        ];
+
+        // Simulated transaction data
+        let transactions = [
+            { id: 'TX001', clientId: 'C001', clientName: 'Alice Smith', date: '2025-06-01', amount: '£1,500', type: 'Deposit', status: 'Completed' },
+            { id: 'TX002', clientId: 'C002', clientName: 'Bob Johnson', date: '2025-06-01', amount: '£2,300', type: 'Withdrawal', status: 'Pending' },
+            { id: 'TX003', clientId: 'C003', clientName: 'Clara Brown', date: '2025-06-02', amount: '£800', type: 'Transfer', status: 'Pending' }
+        ];
+
+        // Simulated mortgage data
+        let mortgages = [
+            { id: 'M001', clientId: 'C001', clientName: 'Alice Smith', amount: '£200,000', term: 30, rate: 3.5, dateAssigned: '2025-06-01' }
+        ];
+
+        // Simulated reminder data
+        let reminders = [];
+
+        // Function to calculate monthly mortgage payment
+        function calculateMonthlyPayment(principal, annualRate, termYears) {
+            const monthlyRate = annualRate / 100 / 12;
+            const numberOfPayments = termYears * 12;
+            if (monthlyRate === 0) {
+                return principal / numberOfPayments;
+            }
+            const payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            return payment.toFixed(2);
+        }
+
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const pages = document.querySelectorAll('.page');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.getAttribute('data-page');
+
+                // Update active navigation item
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Show selected page
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+
+                // Update relevant tables
+                if (pageId === 'transactions') {
+                    updateTransactionsTable();
+                } else if (pageId === 'mortgages') {
+                    updateMortgageFormClientList();
+                    updateMortgagesTable();
+                } else if (pageId === 'savings') {
+                    updateSavingsTable();
+                } else if (pageId === 'client-status') {
+                    updateClientStatusTable();
+                } else if (pageId === 'mortgage-reminders') {
+                    updateMortgageFeesTable();
+                    updateReminderFormClientList();
+                    updateRemindersTable();
+                }
+            });
+        });
+
+        // Function to update the transactions table
+        function updateTransactionsTable() {
+            const tableBody = document.getElementById('transactions-table-body');
+            tableBody.innerHTML = '';
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                const statusClass = transaction.status === 'Completed' ? 'status-completed' :
+                    transaction.status === 'Pending' ? 'status-pending' :
+                        'status-rejected';
+                const actionButtons = transaction.status === 'Pending' ?
+                    `<button class="action-btn approve-btn" onclick="approveTransaction('${transaction.id}')">Approve</button>
+                     <button class="action-btn reject-btn" onclick="rejectTransaction('${transaction.id}')">Reject</button>` :
+                    '-';
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td>${transaction.clientId}</td>
+                    <td>${transaction.clientName}</td>
+                    <td>${transaction.date}</td>
+                    <td>${transaction.amount}</td>
+                    <td>${transaction.type}</td>
+                    <td class="${statusClass}">${transaction.status}</td>
+                    <td>${actionButtons}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to approve a transaction
+        function approveTransaction(transactionId) {
+            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
+            if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
+                transactions[transactionIndex].status = 'Completed';
+                updateTransactionsTable();
+                alert('Transaction approved successfully!');
+            }
+        }
+
+        // Function to reject a transaction
+        function rejectTransaction(transactionId) {
+            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
+            if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
+                transactions[transactionIndex].status = 'Rejected';
+                updateTransactionsTable();
+                alert('Transaction rejected successfully!');
+            }
+        }
+
+        // Function to update the client list in the mortgage assignment form
+        function updateMortgageFormClientList() {
+            const clientSelect = document.getElementById('mortgage-client');
+            clientSelect.innerHTML = '';
+            clients.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = `${c.name} (${c.id})`;
+                clientSelect.appendChild(option);
+            });
+        }
+
+        // Function to assign a mortgage
+        function assignMortgage() {
+            const clientId = document.getElementById('mortgage-client').value;
+            const amount = document.getElementById('mortgage-amount').value;
+            const term = document.getElementById('mortgage-term').value;
+            const rate = document.getElementById('mortgage-rate').value;
+
+            if (!amount || !term || !rate) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            const mortgageId = `M${(mortgages.length + 1).toString().padStart(3, '0')}`;
+            const newMortgage = {
+                id: mortgageId,
+                clientId: clientId,
+                clientName: client.name,
+                amount: `£${parseFloat(amount).toLocaleString()}`,
+                term: term,
+                rate: rate,
+                dateAssigned: '2025-06-02'
+            };
+
+            mortgages.push(newMortgage);
+
+            // Clear the form
+            document.getElementById('mortgage-amount').value = '';
+            document.getElementById('mortgage-term').value = '';
+            document.getElementById('mortgage-rate').value = '';
+
+            // Update the mortgages table
+            updateMortgagesTable();
+
+            alert('Mortgage assigned successfully!');
+        }
+
+        // Function to update the mortgages table
+        function updateMortgagesTable() {
+            const tableBody = document.getElementById('mortgages-table-body');
+            tableBody.innerHTML = '';
+            mortgages.forEach(mortgage => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${mortgage.id}</td>
+                    <td>${mortgage.clientId}</td>
+                    <td>${mortgage.clientName}</td>
+                    <td>${mortgage.amount}</td>
+                    <td>${mortgage.term}</td>
+                    <td>${mortgage.rate}</td>
+                    <td>${mortgage.dateAssigned}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to update the savings table
+        function updateSavingsTable() {
+            const tableBody = document.getElementById('savings-table-body');
+            tableBody.innerHTML = '';
+            clients.forEach(client => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${client.id}</td>
+                    <td>${client.name}</td>
+                    <td>£${client.savings.toLocaleString()}</td>
+                    <td>${client.plan}</td>
+                    <td>${client.lastUpdated}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to update the client status table
+        function updateClientStatusTable() {
+            const tableBody = document.getElementById('client-status-table-body');
+            tableBody.innerHTML = '';
+            clients.forEach(client => {
+                const row = document.createElement('tr');
+                const statusClass = client.status === 'Active' ? 'status-active' : 'status-inactive';
+                row.innerHTML = `
+                    <td>${client.id}</td>
+                    <td>${client.name}</td>
+                    <td>${client.email}</td>
+                    <td class="${statusClass}">${client.status}</td>
+                    <td>${client.joined}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to update the mortgage fees table
+        function updateMortgageFeesTable() {
+            const tableBody = document.getElementById('mortgage-fees-table-body');
+            tableBody.innerHTML = '';
+            mortgages.forEach(mortgage => {
+                const principal = parseFloat(mortgage.amount.replace('£', '').replace(',', ''));
+                const monthlyPayment = calculateMonthlyPayment(principal, mortgage.rate, mortgage.term);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${mortgage.id}</td>
+                    <td>${mortgage.clientId}</td>
+                    <td>${mortgage.clientName}</td>
+                    <td>${mortgage.amount}</td>
+                    <td>£${parseFloat(monthlyPayment).toLocaleString()}</td>
+                    <td><button class="action-btn" onclick="sendReminder('${mortgage.id}')">Send Reminder</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to update the client list in the reminder form
+        function updateReminderFormClientList() {
+            const clientSelect = document.getElementById('reminder-client');
+            clientSelect.innerHTML = '';
+            clients.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = `${c.name} (${c.id})`;
+                clientSelect.appendChild(option);
+            });
+        }
+
+        // Function for the Send Reminder button
+        function sendReminder(mortgageId) {
+            const mortgage = mortgages.find(m => m.id === mortgageId);
+            if (!mortgage) return;
+
+            const clientId = mortgage.clientId;
+            const client = clients.find(c => c.id === clientId);
+            const principal = parseFloat(mortgage.amount.replace('£', '').replace(',', ''));
+            const nextPayment = '£' + calculateMonthlyPayment(principal, mortgage.rate, mortgage.term).toLocaleString();
+
+            // Auto-fill the reminder form
+            document.getElementById('reminder-client').value = clientId;
+
+            // Set a default reminder date (e.g., next month from today, 2025-07-02)
+            const today = new Date('2025-06-02'); // Current date: 09:59 AM +0530 on Monday, June 02, 2025
+            const nextMonth = new Date(today.setMonth(today.getMonth() + 1));
+            const reminderDate = nextMonth.toISOString().split('T')[0];
+            document.getElementById('reminder-date').value = reminderDate;
+
+            // Auto-generate the message
+            const message = `Dear ${client.name}, your next mortgage payment of ${nextPayment} is due on ${reminderDate}. Please ensure funds are available. - Enomy Finance`;
+            document.getElementById('reminder-message').value = message;
+
+            // Simulate sending the reminder
+            sendMortgageReminder();
+        }
+
+        // Function to update the reminder form based on selected client
+        function updateReminderForm(nextPayment = null) {
+            const clientId = document.getElementById('reminder-client').value;
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            // Find the client's mortgage to get the next payment if not provided
+            const mortgage = mortgages.find(m => m.clientId === clientId);
+            if (mortgage && !nextPayment) {
+                const principal = parseFloat(mortgage.amount.replace('£', '').replace(',', ''));
+                nextPayment = '£' + calculateMonthlyPayment(principal, mortgage.rate, mortgage.term).toLocaleString();
+            }
+
+            const reminderDate = document.getElementById('reminder-date').value;
+            if (reminderDate) {
+                const message = `Dear ${client.name}, your next mortgage payment of ${nextPayment} is due on ${reminderDate}. Please ensure funds are available. - Enomy Finance`;
+                document.getElementById('reminder-message').value = message;
+            }
+        }
+
+        // Function to update the reminder message when the date changes
+        function updateReminderMessage() {
+            updateReminderForm();
+        }
+
+        // Function to send a mortgage reminder
+        function sendMortgageReminder() {
+            const clientId = document.getElementById('reminder-client').value;
+            const reminderDate = document.getElementById('reminder-date').value;
+            const message = document.getElementById('reminder-message').value;
+
+            if (!reminderDate || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            const reminderId = `R${(reminders.length + 1).toString().padStart(3, '0')}`;
+            const sentDate = '2025-06-02'; // Current date as per system time (09:59 AM +0530 on Monday, June 02, 2025)
+            const newReminder = {
+                id: reminderId,
+                clientId: clientId,
+                clientName: client.name,
+                reminderDate: reminderDate,
+                message: message,
+                sentDate: sentDate
+            };
+
+            reminders.push(newReminder);
+
+            // Clear the form
+            document.getElementById('reminder-date').value = '';
+            document.getElementById('reminder-message').value = '';
+
+            // Update the reminders table
+            updateRemindersTable();
+
+            alert(`Reminder sent to ${client.name} for ${reminderDate}:\n${message}`);
+        }
+
+        // Function to update the reminders table
+        function updateRemindersTable() {
+            const tableBody = document.getElementById('reminders-table-body');
+            tableBody.innerHTML = '';
+            reminders.forEach(reminder => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reminder.id}</td>
+                    <td>${reminder.clientId}</td>
+                    <td>${reminder.clientName}</td>
+                    <td>${reminder.reminderDate}</td>
+                    <td>${reminder.message}</td>
+                    <td>${reminder.sentDate}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initial loads
+        updateTransactionsTable();
+        updateMortgageFormClientList();
+        updateMortgagesTable();
+        updateSavingsTable();
+        updateClientStatusTable();
+        updateMortgageFeesTable();
+        updateReminderFormClientList();
+        updateRemindersTable();
+    </script>
+</body>
+
+</html>
