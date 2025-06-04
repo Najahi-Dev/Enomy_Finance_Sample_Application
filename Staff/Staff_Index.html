@@ -5,13 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enomy Finance - Staff Application</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #1e1e2f;
+            /* Dark background */
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            color: #d1d5db;
+            /* Light gray text for readability */
         }
 
         .dashboard {
@@ -21,7 +26,8 @@
 
         .sidebar {
             width: 250px;
-            background: #1a2a44;
+            background: #0d1a26;
+            /* Darker blue for sidebar */
             color: #fff;
             padding: 20px 0;
             position: fixed;
@@ -35,6 +41,7 @@
             margin: 0 0 30px;
             font-size: 24px;
             text-align: center;
+            color: #fff;
         }
 
         .sidebar ul {
@@ -45,19 +52,31 @@
 
         .sidebar ul li {
             padding: 15px 20px;
-            text-align: center;
             cursor: pointer;
             transition: background 0.3s;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            /* justify-content: center; */
+            color: #d1d5db;
+        }
+
+        .sidebar ul li i {
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         .sidebar ul li:hover {
-            background: #2c3e50;
+            background: #1c252f;
+            /* Slightly lighter hover state */
             border-radius: 5px;
         }
 
         .sidebar ul li.active {
-            background: #3498db;
+            background: #4a90e2;
+            /* Bright blue for active state */
             border-radius: 5px;
+            color: #fff;
         }
 
         .main-content {
@@ -80,15 +99,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
+            background: #2a2a3b;
+            /* Dark card background */
             padding: 15px 25px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             margin-bottom: 30px;
         }
 
         .header h1 {
-            color: #1a2a44;
+            color: #fff;
+            /* White text for headers */
             margin: 0;
             font-size: 28px;
         }
@@ -97,6 +118,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            color: #d1d5db;
         }
 
         .user-info img {
@@ -107,18 +129,62 @@
         }
 
         .chart-card {
-            background: #fff;
+            background: #2a2a3b;
+            /* Dark card background */
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
+            color: #d1d5db;
         }
 
         .chart-card h3 {
-            color: #1a2a44;
+            color: #fff;
             margin: 0 0 15px;
             font-size: 20px;
             text-align: center;
+        }
+
+        .summary-card {
+            background: #2a2a3b;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            margin: 0 15px 15px 0;
+            width: 200px;
+            text-align: center;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .summary-card h4 {
+            color: #fff;
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .summary-card p {
+            margin: 0;
+            font-size: 24px;
+            color: #4a90e2;
+            /* Bright blue for numbers */
+            font-weight: bold;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .chart-box {
+            width: 45%;
+            min-width: 300px;
+            background: #2a2a3b;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         table {
@@ -131,20 +197,29 @@
         table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ecf0f1;
+            border-bottom: 1px solid #3a3a4b;
+            /* Darker border for tables */
         }
 
         table th {
-            background: #1a2a44;
+            background: #0d1a26;
+            /* Dark blue for table headers */
             color: #fff;
         }
 
+        table tr {
+            background: #252535;
+            /* Dark row background */
+        }
+
         table tr:hover {
-            background: #f9f9f9;
+            background: #303045;
+            /* Slightly lighter on hover */
         }
 
         table .action-btn {
-            background: #3498db;
+            background: #4a90e2;
+            /* Bright blue for buttons */
             color: #fff;
             border: none;
             padding: 5px 10px;
@@ -154,47 +229,55 @@
         }
 
         table .action-btn:hover {
-            background: #2c3e50;
+            background: #357abd;
+            /* Darker blue on hover */
         }
 
         .approve-btn {
-            background: #28a745;
+            background: #2ecc71;
+            /* Green for approve */
         }
 
         .approve-btn:hover {
-            background: #218838;
+            background: #27ae60;
         }
 
         .reject-btn {
-            background: #dc3545;
+            background: #e74c3c;
+            /* Red for reject */
         }
 
         .reject-btn:hover {
-            background: #c82333;
+            background: #c0392b;
         }
 
         .status-completed {
-            color: green;
+            color: #2ecc71;
+            /* Green for completed */
             font-weight: bold;
         }
 
         .status-pending {
-            color: orange;
+            color: #f1c40f;
+            /* Yellow for pending */
             font-weight: bold;
         }
 
         .status-rejected {
-            color: red;
+            color: #e74c3c;
+            /* Red for rejected */
             font-weight: bold;
         }
 
         .status-active {
-            color: green;
+            color: #2ecc71;
+            /* Green for active */
             font-weight: bold;
         }
 
         .status-inactive {
-            color: red;
+            color: #e74c3c;
+            /* Red for inactive */
             font-weight: bold;
         }
 
@@ -206,7 +289,7 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #1a2a44;
+            color: #d1d5db;
         }
 
         .form-group input,
@@ -214,13 +297,23 @@
         .form-group textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ecf0f1;
+            border: 1px solid #3a3a4b;
             border-radius: 5px;
             box-sizing: border-box;
+            background: #252535;
+            /* Dark input background */
+            color: #d1d5db;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #6b7280;
+            /* Gray placeholder text */
         }
 
         .form-group button {
-            background: #1a2a44;
+            background: #0d1a26;
+            /* Dark button background */
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -229,7 +322,8 @@
         }
 
         .form-group button:hover {
-            background: #2c3e50;
+            background: #1c252f;
+            /* Slightly lighter on hover */
         }
     </style>
 </head>
@@ -239,21 +333,73 @@
         <div class="sidebar">
             <h2>Enomy Finance</h2>
             <ul>
-                <li class="nav-item active" data-page="transactions">Client Transactions</li>
-                <li class="nav-item" data-page="mortgages">Assign Mortgages</li>
-                <li class="nav-item" data-page="savings">Client Savings</li>
-                <li class="nav-item" data-page="client-status">Client Status</li>
-                <li class="nav-item" data-page="mortgage-reminders">Mortgage Reminders</li>
+                <li class="nav-item active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+                <li class="nav-item" data-page="transactions"><i class="fas fa-exchange-alt"></i> Client Transactions
+                </li>
+                <li class="nav-item" data-page="mortgages"><i class="fas fa-home"></i> Assign Mortgages</li>
+                <li class="nav-item" data-page="savings"><i class="fas fa-piggy-bank"></i> Client Savings</li>
+                <li class="nav-item" data-page="client-status"><i class="fas fa-users"></i> Client Status</li>
+                <li class="nav-item" data-page="mortgage-reminders"><i class="fas fa-bell"></i> Mortgage Reminders</li>
             </ul>
         </div>
         <div class="main-content">
+            <!-- Dashboard Page -->
+            <div class="page active" id="dashboard">
+                <div class="header">
+                    <h1>Staff Dashboard</h1>
+                    <div class="user-info">
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Overview</h3>
+                    <div>
+                        <div class="summary-card">
+                            <h4>Pending Transactions</h4>
+                            <p id="pending-transactions">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Total Mortgages</h4>
+                            <p id="total-mortgages">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Total Savings (£)</h4>
+                            <p id="total-savings">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Active Clients</h4>
+                            <p id="active-clients">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-box">
+                        <h3>Transaction Status</h3>
+                        <canvas id="transactionStatusChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Client Savings Distribution</h3>
+                        <canvas id="savingsDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
             <!-- Client Transactions Page -->
-            <div class="page active" id="transactions">
+            <div class="page" id="transactions">
                 <div class="header">
                     <h1>Client Transactions</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <span>Emily</span>
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -283,8 +429,12 @@
                 <div class="header">
                     <h1>Assign Mortgages</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <span>Emily</span>
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -337,8 +487,12 @@
                 <div class="header">
                     <h1>Client Savings</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <span>Emily</span>
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -365,8 +519,12 @@
                 <div class="header">
                     <h1>Client Account Status</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <span>Emily</span>
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -393,8 +551,12 @@
                 <div class="header">
                     <h1>Mortgage Reminders</h1>
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <span>Emily</span>
+                        <a href="/index.html"
+                            style="text-decoration: none; display: flex; align-items: center; color: #ffffff; font-weight: bold;">
+                    
+                            <img src="https://placehold.co/40" alt="User">
+                            <span>John</span>
+                        </a>
                     </div>
                 </div>
                 <div class="chart-card">
@@ -460,9 +622,9 @@
     <script>
         // Simulated client data
         let clients = [
-            { id: 'C001', name: 'Alice Smith', email: 'alice@example.com', status: 'Active', joined: '2025-01-15', savings: 5000, plan: 'Savings Plan Plus', lastUpdated: '2025-06-02' },
+            { id: 'C001', name: 'Alice Smith', email: 'alice@example.com', status: 'Active', joined: '2025-01-15', savings: 5000, plan: 'Savings Plan Plus', lastUpdated: '2025-06-03' },
             { id: 'C002', name: 'Bob Johnson', email: 'bob@example.com', status: 'Inactive', joined: '2025-02-20', savings: 3000, plan: 'Basic Investment', lastUpdated: '2025-06-01' },
-            { id: 'C003', name: 'Clara Brown', email: 'clara@example.com', status: 'Active', joined: '2025-03-10', savings: 7500, plan: 'Stock Investment', lastUpdated: '2025-06-02' }
+            { id: 'C003', name: 'Clara Brown', email: 'clara@example.com', status: 'Active', joined: '2025-03-10', savings: 7500, plan: 'Stock Investment', lastUpdated: '2025-06-03' }
         ];
 
         // Simulated transaction data
@@ -479,6 +641,10 @@
 
         // Simulated reminder data
         let reminders = [];
+
+        // Chart instances for updating
+        let transactionStatusChart = null;
+        let savingsDistributionChart = null;
 
         // Function to calculate monthly mortgage payment
         function calculateMonthlyPayment(principal, annualRate, termYears) {
@@ -507,7 +673,7 @@
                 pages.forEach(page => page.classList.remove('active'));
                 document.getElementById(pageId).classList.add('active');
 
-                // Update relevant tables
+                // Update relevant tables and dashboard
                 if (pageId === 'transactions') {
                     updateTransactionsTable();
                 } else if (pageId === 'mortgages') {
@@ -521,6 +687,8 @@
                     updateMortgageFeesTable();
                     updateReminderFormClientList();
                     updateRemindersTable();
+                } else if (pageId === 'dashboard') {
+                    updateDashboard();
                 }
             });
         });
@@ -558,6 +726,7 @@
             if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
                 transactions[transactionIndex].status = 'Completed';
                 updateTransactionsTable();
+                updateDashboard(); // Update dashboard after approval
                 alert('Transaction approved successfully!');
             }
         }
@@ -568,6 +737,7 @@
             if (transactionIndex !== -1 && transactions[transactionIndex].status === 'Pending') {
                 transactions[transactionIndex].status = 'Rejected';
                 updateTransactionsTable();
+                updateDashboard(); // Update dashboard after rejection
                 alert('Transaction rejected successfully!');
             }
         }
@@ -605,7 +775,7 @@
                 amount: `£${parseFloat(amount).toLocaleString()}`,
                 term: term,
                 rate: rate,
-                dateAssigned: '2025-06-02'
+                dateAssigned: '2025-06-03' // Updated to current date
             };
 
             mortgages.push(newMortgage);
@@ -615,8 +785,9 @@
             document.getElementById('mortgage-term').value = '';
             document.getElementById('mortgage-rate').value = '';
 
-            // Update the mortgages table
+            // Update the mortgages table and dashboard
             updateMortgagesTable();
+            updateDashboard();
 
             alert('Mortgage assigned successfully!');
         }
@@ -720,8 +891,8 @@
             // Auto-fill the reminder form
             document.getElementById('reminder-client').value = clientId;
 
-            // Set a default reminder date (e.g., next month from today, 2025-07-02)
-            const today = new Date('2025-06-02'); // Current date: 09:59 AM +0530 on Monday, June 02, 2025
+            // Set a default reminder date (e.g., next month from today, 2025-07-03)
+            const today = new Date('2025-06-03'); // Current date: 10:54 AM +0530 on Tuesday, June 03, 2025
             const nextMonth = new Date(today.setMonth(today.getMonth() + 1));
             const reminderDate = nextMonth.toISOString().split('T')[0];
             document.getElementById('reminder-date').value = reminderDate;
@@ -772,7 +943,7 @@
 
             const client = clients.find(c => c.id === clientId);
             const reminderId = `R${(reminders.length + 1).toString().padStart(3, '0')}`;
-            const sentDate = '2025-06-02'; // Current date as per system time (09:59 AM +0530 on Monday, June 02, 2025)
+            const sentDate = '2025-06-03'; // Current date as per system time (10:54 AM +0530 on Tuesday, June 03, 2025)
             const newReminder = {
                 id: reminderId,
                 clientId: clientId,
@@ -788,8 +959,9 @@
             document.getElementById('reminder-date').value = '';
             document.getElementById('reminder-message').value = '';
 
-            // Update the reminders table
+            // Update the reminders table and dashboard
             updateRemindersTable();
+            updateDashboard();
 
             alert(`Reminder sent to ${client.name} for ${reminderDate}:\n${message}`);
         }
@@ -812,6 +984,132 @@
             });
         }
 
+        // Function to update the transaction status chart
+        function updateTransactionStatusChart() {
+            const ctx = document.getElementById('transactionStatusChart').getContext('2d');
+            const completed = transactions.filter(t => t.status === 'Completed').length;
+            const pending = transactions.filter(t => t.status === 'Pending').length;
+            const rejected = transactions.filter(t => t.status === 'Rejected').length;
+
+            // Destroy existing chart if it exists
+            if (transactionStatusChart) {
+                transactionStatusChart.destroy();
+            }
+
+            transactionStatusChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Completed', 'Pending', 'Rejected'],
+                    datasets: [{
+                        label: 'Transactions',
+                        data: [completed, pending, rejected],
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 0.7)', // Green for Completed
+                            'rgba(241, 196, 15, 0.7)', // Yellow for Pending
+                            'rgba(231, 76, 60, 0.7)'   // Red for Rejected
+                        ],
+                        borderColor: [
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(241, 196, 15, 1)',
+                            'rgba(231, 76, 60, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#d1d5db' // Light gray for axis labels
+                            },
+                            grid: {
+                                color: '#3a3a4b' // Darker grid lines
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#d1d5db'
+                            },
+                            grid: {
+                                color: '#3a3a4b'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to update the savings distribution chart
+        function updateSavingsDistributionChart() {
+            const ctx = document.getElementById('savingsDistributionChart').getContext('2d');
+            const savingsData = clients.map(client => client.savings);
+            const labels = clients.map(client => client.name);
+
+            // Destroy existing chart if it exists
+            if (savingsDistributionChart) {
+                savingsDistributionChart.destroy();
+            }
+
+            savingsDistributionChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Savings (£)',
+                        data: savingsData,
+                        backgroundColor: [
+                            'rgba(74, 144, 226, 0.7)', // Blue for Client 1
+                            'rgba(231, 76, 60, 0.7)',  // Red for Client 2
+                            'rgba(46, 204, 113, 0.7)'  // Green for Client 3
+                        ],
+                        borderColor: [
+                            'rgba(74, 144, 226, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(46, 204, 113, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#d1d5db' // Light gray for legend text
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to update the dashboard
+        function updateDashboard() {
+            // Update summary cards
+            const pendingTransactions = transactions.filter(t => t.status === 'Pending').length;
+            document.getElementById('pending-transactions').textContent = pendingTransactions;
+
+            const totalMortgages = mortgages.length;
+            document.getElementById('total-mortgages').textContent = totalMortgages;
+
+            const totalSavings = clients.reduce((sum, client) => sum + client.savings, 0);
+            document.getElementById('total-savings').textContent = `£${totalSavings.toLocaleString()}`;
+
+            const activeClients = clients.filter(c => c.status === 'Active').length;
+            document.getElementById('active-clients').textContent = activeClients;
+
+            // Update charts
+            updateTransactionStatusChart();
+            updateSavingsDistributionChart();
+        }
+
         // Initial loads
         updateTransactionsTable();
         updateMortgageFormClientList();
@@ -821,6 +1119,7 @@
         updateMortgageFeesTable();
         updateReminderFormClientList();
         updateRemindersTable();
+        updateDashboard(); // Initial dashboard load
     </script>
 </body>
 
